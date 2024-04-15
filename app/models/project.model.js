@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Project = mongoose.model(
     "Project",
     new mongoose.Schema({
+        
         buildingname: { type: String },
         location: { type: String },
         address: { type: String },
@@ -15,13 +16,15 @@ const Project = mongoose.model(
         totalprojectvalue: { type: String },
         suggestion: { type: String },
         remarks: { type: String },
-        customerid: { type: String },
-        builderid: { type: String },
-        supplierid: { type: String },
-        contractorid: { type: String },
+        CUSTOMER_ID: { type: String },
+        BUILDER_ID: { type: String },
+        SUPPLIER_ID: { type: String },
+        CONTRACTOR_ID: { type: String },
         startdate: { type: Date },
         enddate: { type: Date },
-        extensiondate: { type: Date }
+        extensiondate: { type: Date },
+        projectStatus : { type: Boolean},
+        createdOn: { type: Date }
     })
 );
 

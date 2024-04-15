@@ -5,12 +5,13 @@ const Admin = mongoose.model(
   new mongoose.Schema({
     usercode: String,
     password: String,
-    accountstatus: Boolean,
+    accountstatus: { type: Boolean, default: true },
     mobile: String,
     email: String,
     createdOn: Date,
     username: String,
-    profile: String
+    profile: String,
+    roles: String
   })
 );
 

@@ -3,15 +3,18 @@ const mongoose = require("mongoose");
 const Customer = mongoose.model(
   "Customer",
   new mongoose.Schema({
-    name: { type: String },
+    usercode: { type: String },
+    username: { type: String },
+    dob: { type: String },
     mobile: { type: String },
     email: { type: String },
+    address: { type: String},
     password: { type: String },
-    photo: { type: String },
-    accountstatus: { type: String },
+    profile: { type: String },
+    accountstatus: { type: Boolean, default: true },
     roles: { type: String },
     BUILD_ID: { type: String },
-    date: { type: String }
+    createdOn: { type: Date }
   })
 );
 

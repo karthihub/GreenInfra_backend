@@ -6,10 +6,11 @@ const db = {};
 db.mongoose = mongoose;
 
 db.Admin = require("./admin.model");
+
 db.Customer = require("./customer.model");
 db.Builder = require("./builder.model");
 db.Supplier = require("./supplier.model");
-// db.SubContractor = require("./");
+db.Contractor =  require("./contractor.model");
 
 db.Project = require("./project.model");
 

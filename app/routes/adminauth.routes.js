@@ -35,61 +35,68 @@ module.exports = function (app) {
 //------------------------------------------------------------------------
   //customer
 
-  app.post("/api/adminauth/CustomerLogin", controller.CustomerLogin);
+  app.post("/api/adminauth/CustomerLogin", [authJwt.verifyToken], controller.CustomerLogin);
 
-  app.post("/api/adminauth/CustomerSignup", controller.CustomerSignup);
+  app.post("/api/adminauth/CustomerSignup", [authJwt.verifyToken], controller.CustomerSignup);
 
-  app.get("/api/adminsuth/getCustomers", [authJwt.verifyToken], controller.getCustomers);
+  app.get("/api/adminauth/getCustomers", [authJwt.verifyToken], controller.getCustomers);
+
+  app.get("/api/adminauth/getCustomersDisable", [authJwt.verifyToken], controller.getCustomersDisable);
 
 //----------------------------------------------------------------------
   //builder
 
-  app.post("/api/adminauth/BuilderLogin", controller.BuilderLogin);
+  app.post("/api/adminauth/BuilderLogin", [authJwt.verifyToken], controller.BuilderLogin);
 
-  app.post("/api/adminauth/BuilderSignup", controller.BuilderSignup);
+  app.post("/api/adminauth/BuilderSignup", [authJwt.verifyToken], controller.BuilderSignup);
 
   app.get("/api/adminauth/getBuilders",[authJwt.verifyToken], controller.getBuilders);
+
+  app.get("/api/adminauth/getBuildersDisable", [authJwt.verifyToken], controller.getBuildersDisable);
 
 //----------------------------------------------------------------------------
 
   //supplier
-  app.post("/api/adminauth/SupplierLogin", controller.SupplierLogin);
+  app.post("/api/adminauth/SupplierLogin", [authJwt.verifyToken], controller.SupplierLogin);
 
-  app.post("/api/adminauth/SupplierSignup", controller.SupplierSignup);
+  app.post("/api/adminauth/SupplierSignup", [authJwt.verifyToken], controller.SupplierSignup);
 
-  app.get("/api/adminauth/getSuppliers",[authJwt.verifyToken], controller.getSuppliers);
+  app.get("/api/adminauth/getSuppliers", [authJwt.verifyToken], controller.getSuppliers);
 
+  app.get("/api/adminauth/getSuppliersDisable", [authJwt.verifyToken], controller.getSuppliersDisable);
 //------------------------------------------------------------------------------
 
   //vendor
-  app.post("/api/adminsuth/VendorLogin", controller.VendorLogin);
+  // app.post("/api/adminsuth/VendorLogin", controller.VendorLogin);
 
-  app.post("/api/adminauth/VendorSignup", controller.VendorSignup);
+  // app.post("/api/adminauth/VendorSignup", controller.VendorSignup);
 
-  app.get("/api/adminauth/GetVendor",[authJwt.verifyToken], controller.GetVendor);
+  // app.get("/api/adminauth/GetVendor",[authJwt.verifyToken], controller.GetVendor);
 
 //------------------------------------------------------------------------------------
 
-//subcontractor
-  app.post("/api/adminauth/subcontractorLogin", controller.subcontractorLogin);
+//Contractor
+  app.post("/api/adminauth/ContractorLogin", [authJwt.verifyToken], controller.ContractorLogin);
 
-  app.post("/api/adminauth/subcontractorSignup", controller.subcontractorSignup);
+  app.post("/api/adminauth/ContractorSignup", [authJwt.verifyToken], controller.ContractorSignup);
 
-  app.get("/api/adminauth/GetSubContractor",[authJwt.verifyToken], controller.GetSubContractor);
+  app.get("/api/adminauth/GetContractor",[authJwt.verifyToken], controller.GetContractor);
  
 //--------------------------------------------------------------------------------------
 
 //projects
   app.post("/api/adminauth/ProjectAdd", [authJwt.verifyToken], controller.ProjectAdd);
 
-  app.post("/api/adminauth/ProjectEdit", [authJwt.verifyToken], controller.ProjectEdit);
+  app.post("/api/adminauth/ProjectUpdate", [authJwt.verifyToken], controller.ProjectUpdate);
 
-  app.post("/api/adminauth/ProjectRemove", [authJwt.verifyToken], controller.ProjectRemove);
+  app.post("/api/adminauth/ProjectDisable", [authJwt.verifyToken], controller.ProjectDisable);
 
   app.get("/api/adminauth/GetAllProject", [authJwt.verifyToken], controller.GetAllProject);
 
 
+//--------------------------------------------------------------------------------------
 
+//dashboard
   app.get("/api/adminauth/getDashboardData", [authJwt.verifyToken], controller.getDashboardData);
 
 

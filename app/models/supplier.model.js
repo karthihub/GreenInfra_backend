@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const Supplier = mongoose.model(
     "Supplier",
     new mongoose.Schema({
+        usercode: { type: String },
         username: { type: String },
         mobile: { type: String },
         email: { type: String },
         password: { type: String },
-        photo: { type: String },
+        profile: { type: String },
         companyname: { type: String },
         companymobile: { type: String },
         companyemail: { type: String },
@@ -16,10 +17,15 @@ const Supplier = mongoose.model(
         state: { type: String },
         location: { type: String },
         roles: { type: String },
-        date: { type: Date },
-        accountstatus: { type: String, default: true },
-        Build_ID: { type: String }
+        createdOn: { type: Date },
+        accountstatus: { type: Boolean, default: true },
+        Build_ID: { type: String },
+    
     })
 );
 
 module.exports = Supplier;  
+
+
+
+
