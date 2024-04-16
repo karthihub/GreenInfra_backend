@@ -80,7 +80,9 @@ module.exports = function (app) {
 
   app.post("/api/adminauth/ContractorSignup", [authJwt.verifyToken], controller.ContractorSignup);
 
-  app.get("/api/adminauth/GetContractor",[authJwt.verifyToken], controller.GetContractor);
+  app.get("/api/adminauth/GetContractor", [authJwt.verifyToken], controller.GetContractor);
+
+  app.get("/api/adminauth/GetContractorDisable", [authJwt.verifyToken], controller.GetContractorDisable);
  
 //--------------------------------------------------------------------------------------
 

@@ -425,7 +425,7 @@ exports.BuilderSignup = (req, res) => {
     mobile:  req.body.mobile,
     email:  req.body.email,
     password:  bcrypt.hashSync(req.body.password, 8),
-    profile:  req.file.profile,
+    profile:  req.body.profile,
     companyname:   req.body.companyname,
     companymobile:   req.body.companymobile,
     companyemail:   req.body.companyemail,
@@ -759,7 +759,9 @@ exports.ContractorSignup = (req, res) => {
     mobile:  req.body.mobile,
     email:  req.body.email, 
     password: bcrypt.hashSync(req.body.password, 8),  
-    profile:  req.file.profile, 
+    profile:  req.body.profile, 
+    address: req.body.address,
+    location: req.body.location,
     accountstatus: true ,
     roles: req.body.roles,  
     BUILD_ID: req.body.BUILD_ID,
@@ -817,9 +819,15 @@ exports.ContractorSignup = (req, res) => {
 
 exports.GetContractor = async (req, res) => {
 
-  const list = await Contractor.find({});
-  logger.info("getContractorlist.find", { Contractorlist: list, status: true });
-  res.status(200).send({ Contractorlist: list, status: true });
+  const list = await Contractor.find({ accountstatus : true });
+  logger.info("getContractorlist.find", { contractorlist: list, status: true });
+  res.status(200).send({ contractorlist: list, status: true });
+
+};
+exports.GetContractorDisable = async (req, res) => {
+  const build = await Contractor.find({ accountstatus: false });
+  logger.info("getContractorlist.find", { contractorlist: build, status: true });
+  res.status(200).send({ contractorlist: build, status: true });
 
 };
 

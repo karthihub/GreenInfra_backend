@@ -9,6 +9,8 @@ const Contractor = mongoose.model(
         email: { type: String }, 
         password: { type: String }, 
         profile: { type: String }, 
+        address: { type: String },
+        location: { type: String },
         accountstatus: { type: Boolean, default: true },
         roles: { type: String }, 
         BUILD_ID: { type: String }, 
