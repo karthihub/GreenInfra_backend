@@ -9,6 +9,7 @@ const Customer = mongoose.model(
     mobile: { type: String },
     email: { type: String },
     address: { type: String},
+    location: { type :String },
     password: { type: String },
     profile: { type: String },
     accountstatus: { type: Boolean, default: true },
