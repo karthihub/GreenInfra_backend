@@ -35,7 +35,7 @@ module.exports = function (app) {
 //------------------------------------------------------------------------
   //customer
 
-  app.post("/api/adminauth/CustomerLogin", [authJwt.verifyToken], controller.CustomerLogin);
+  app.post("/api/adminauth/CustomerLogin", controller.CustomerLogin);
 
   app.post("/api/adminauth/CustomerSignup", [authJwt.verifyToken], controller.CustomerSignup);
 
@@ -46,7 +46,7 @@ module.exports = function (app) {
 //----------------------------------------------------------------------
   //builder
 
-  app.post("/api/adminauth/BuilderLogin", [authJwt.verifyToken], controller.BuilderLogin);
+  app.post("/api/adminauth/BuilderLogin", controller.BuilderLogin);
 
   app.post("/api/adminauth/BuilderSignup", [authJwt.verifyToken], controller.BuilderSignup);
 
@@ -57,7 +57,7 @@ module.exports = function (app) {
 //----------------------------------------------------------------------------
 
   //supplier
-  app.post("/api/adminauth/SupplierLogin", [authJwt.verifyToken], controller.SupplierLogin);
+  app.post("/api/adminauth/SupplierLogin", controller.SupplierLogin);
 
   app.post("/api/adminauth/SupplierSignup", [authJwt.verifyToken], controller.SupplierSignup);
 
@@ -76,7 +76,7 @@ module.exports = function (app) {
 //------------------------------------------------------------------------------------
 
 //Contractor
-  app.post("/api/adminauth/ContractorLogin", [authJwt.verifyToken], controller.ContractorLogin);
+  app.post("/api/adminauth/ContractorLogin", controller.ContractorLogin);
 
   app.post("/api/adminauth/ContractorSignup", [authJwt.verifyToken], controller.ContractorSignup);
 
@@ -102,7 +102,23 @@ module.exports = function (app) {
   app.get("/api/adminauth/getDashboardData", [authJwt.verifyToken], controller.getDashboardData);
 
 
- 
+ //----------------------------------------------------------------------------------------
+
+ //material
+
+
+ app.post("/api/adminauth/MaterialsAdd", [authJwt.verifyToken], controller.MaterialsAdd);
+
+ app.get("/api/adminauth/getMaterials", [authJwt.verifyToken], controller.getMaterials);
+
+ //-------------------------------------------------------------------------------------------------------
+
+// Project Materials
+
+ app.post("/api/adminauth/ProjectMaterialsAdd", [authJwt.verifyToken], controller.ProjectMaterialsAdd);
+
+ app.get("/api/adminauth/getProjectMaterials", [authJwt.verifyToken], controller.getProjectMaterials);
+
   
 
 

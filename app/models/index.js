@@ -12,6 +12,9 @@ db.Builder = require("./builder.model");
 db.Supplier = require("./supplier.model");
 db.Contractor =  require("./contractor.model");
 
+db.Materials = require("./material.model");
+db.ProjectMaterials = require("./projectmaterial.model"); 
+
 db.Project = require("./project.model");
 
 // db.players = require("./players.model");

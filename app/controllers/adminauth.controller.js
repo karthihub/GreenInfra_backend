@@ -21,6 +21,8 @@ const Supplier = db.Supplier;
 
 const Project = db.Project;
 
+const ProjectMaterials = db.ProjectMaterials;
+const Materials = db.Materials;
 
 const mongoose = require("mongoose");
 const Account = db.Account;
@@ -169,12 +171,9 @@ exports.getAdmins = async (req, res) =>{
 exports.CustomerLogin = (req, res) => {
 
   Customer.findOne({ usercode: req.body.usercode })
-    .exec((err, user) => {
-      if (err) {
-        logger.info("CustomerSignin.findOne", { err });
-        res.status(500).send({ message: err, status: false });
-        return;
-      }
+    .exec()
+    .then(user => {
+     
 
       if (!user) {
         logger.info("CustomerSignin.findOne", { message: "User Not found.", status: false });
@@ -256,7 +255,7 @@ exports.CustomerSignup = (req, res) => {
     password:  bcrypt.hashSync(req.body.password, 8),
     profile:  req.body.profile,
     accountstatus: true,
-    roles:  req.body.roles,
+    roles:  "Customer",
     BUILD_ID: req.body.BUILD_ID, 
     createdOn: moment().format('LLL').toString()
 
@@ -334,7 +333,7 @@ exports.BuilderLogin = (req, res) => {
   
   console.log(req.body);
 
-  Builder.findOne({ usercode: req.body.username })
+  Builder.findOne({ usercode: req.body.usercode })
     .exec() 
     .then(user => {
 
@@ -368,7 +367,7 @@ exports.BuilderLogin = (req, res) => {
           profile: user.profile,
           companyname: user.companyname, 
           companymobile: user.companymobile,
-          companyemail: companyemail,
+          companyemail:  user.companyemail,
           officeaddress: user.officeaddress, 
           location: user.location, 
           roles: user.roles, 
@@ -390,7 +389,7 @@ exports.BuilderLogin = (req, res) => {
           profile: user.profile,
           companyname: user.companyname, 
           companymobile: user.companymobile,
-          companyemail: companyemail,
+          companyemail: user.companyemail,
           officeaddress: user.officeaddress, 
           location: user.location, 
           roles: user.roles, 
@@ -432,7 +431,7 @@ exports.BuilderSignup = (req, res) => {
     companyemail:   req.body.companyemail,
     officeaddress:   req.body.officeaddress,
     location:   req.body.location,
-    roles:   req.body.roles,
+    roles:   "Builder",
     accountstatus: true ,
     Admin_ID:  req.body.Admin_ID,
     createdOn: moment().format('LLL').toString()
@@ -507,7 +506,7 @@ exports.SupplierLogin = (req, res) => {
   
   console.log(req.body);
 
-  Supplier.findOne({ usercode: req.body.username })
+  Supplier.findOne({ username: req.body.usercode })
     .exec() 
     .then(user => {
 
@@ -606,7 +605,7 @@ exports.SupplierSignup = (req, res) => {
     city:  req.body.city,
     state:  req.body.state,
     location:  req.body.location,
-    roles:  req.body.roles,
+    roles:  "Supplier",
     createdOn: moment().format('LLL').toString(),
     accountstatus:  true,
     Build_ID:  req.body.BUILD_ID
@@ -663,16 +662,16 @@ exports.SupplierSignup = (req, res) => {
 exports.getSuppliers = async (req, res) => {
 
   const list = await Supplier.find({ accountstatus: true });
-  logger.info("getSupplierList.find", { Supplierlist: list, status: true });
-  res.status(200).send({ Supplierlist: list, status: true });
+  logger.info("getSupplierList.find", { supplierlist: list, status: true });
+  res.status(200).send({ supplierlist: list, status: true });
 
 };
 
 exports.getSuppliersDisable = async (req, res) => {
   
   const list = await Supplier.find({ accountstatus: false });
-  logger.info("getSupplierList.find", { Supplierlist: list, status: true });
-  res.status(200).send({ Supplierlist: list, status: true });
+  logger.info("getSupplierList.find", { supplierlist: list, status: true });
+  res.status(200).send({ supplierlist: list, status: true });
 
 }; 
 
@@ -682,7 +681,7 @@ exports.getSuppliersDisable = async (req, res) => {
 exports.ContractorLogin = (req, res) => {
   console.log(req.body);
 
-  Contractor.findOne({ usercode: req.body.username })
+  Contractor.findOne({ usercode: req.body.usercode })
     .exec() 
     .then(user => {
 
@@ -764,7 +763,7 @@ exports.ContractorSignup = (req, res) => {
     address: req.body.address,
     location: req.body.location,
     accountstatus: true ,
-    roles: req.body.roles,  
+    roles: "Contractor",  
     BUILD_ID: req.body.BUILD_ID,
     createdOn: moment().format('LLL').toString()
 
@@ -844,7 +843,7 @@ exports.ProjectAdd = (req, res) => {
     location:  req.body.location,
     address:  req.body.address,
     permit:  req.body.permit,
-    blueprint: req.file.blueprint, 
+    blueprint: req.body.blueprint, 
     totalsquarefeet:  req.body.totalsquarefeet,
     squarefeetprice:  req.body.squarefeetprice,
     othercost:  req.body.othercost,
@@ -852,16 +851,18 @@ exports.ProjectAdd = (req, res) => {
     totalprojectvalue:  req.body.totalprojectvalue,
     suggestion:  req.body.suggestion,
     remarks:  req.body.remarks,
-    CUSTOMER_ID:  req.body.CUSTOMER_ID,
-    BUILDER_ID:  req.body.BUILDER_ID,
-    SUPPLIER_ID:  req.body.SUPPLIER_ID,
-    CONTRACTOR_ID:  req.body.CONTRACTOR_ID,
+    CUSTOMER_ID:  req.body.custimerid,
+    BUILDER_ID:  req.body.builderid,
+    SUPPLIER_ID:  req.body.supplierid,
+    CONTRACTOR_ID:  req.body.contractorid,
     startdate: req.body.startdate,
     enddate: req.body.enddate,
     extensiondate: req.body.extensiondate,
     projectStatus : true,
-    createdOn: moment().format('LLL').toString()
+    createdOn: moment().format('LLL').toString(),
+    // material: req.body.material,
   });
+
 
   project.save();
 
@@ -914,5 +915,71 @@ exports.getDashboardData = async (req, res) => {
   
 };
 
+
+//materials
+exports.MaterialsAdd = (req, res) => {
+
+  console.log(req.body);
+  
+  const material = new Materials({
+    materialname : req.body.materialname,
+    type : req.body.type,
+    quantity : req.body.quantity,
+    price : req.body.price,
+    location : req.body.location,
+    accountstatus : true,
+    SUPPLIER_ID : req.body.SUPPLIER_ID,
+    createdOn: moment().format('LLL').toString()
+  });
+
+  material.save();
+
+  logger.info("MaterialAdd", { message: "Material was added successfully!", status: true });
+  res.send({ message: "Material was added successfully!", status: true });
+
+
+};
+
+exports.getMaterials = async (req, res) => {
+
+  const list = await Materials.find({});
+  logger.info("getMaterialslist.find", { materialslist: list, status: true });
+  res.status(200).send({ materialslist: list, status: true });
+
+
+};
+
+//project materials
+exports.ProjectMaterialsAdd = (req, res) => {
+
+  console.log(req.body);
+  
+  const projectmaterial = new ProjectMaterials({
+    materialname : req.body.materialname,
+    type : req.body.type,
+    quantity : req.body.quantity,
+    price : req.body.price,
+    location : req.body.location,
+    accountstatus : true,
+    SUPPLIER_ID : req.body.SUPPLIER_ID,
+    PROJECT_ID : req.body.PROJECT_ID,
+  });
+
+  projectmaterial.save();
+
+  logger.info("Project MaterialAdd", { message: "Project Material was added successfully!", status: true });
+  res.send({ message: "Project Material was added successfully!", status: true });
+
+
+};
+
+exports.getProjectMaterials = async (req, res) => {
+
+  const list = await ProjectMaterials.find({});
+  logger.info("getProjectMaterials.find", { ProjectMaterialslist: list, status: true });
+  res.status(200).send({ ProjectMaterialslist: list, status: true });
+
+
+};
 
 
