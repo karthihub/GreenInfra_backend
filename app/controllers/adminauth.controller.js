@@ -166,166 +166,6 @@ exports.getAdmins = async (req, res) =>{
 
 };
 
-//-------------------------------------------------------------------
-//Customer Login
-exports.CustomerLogin = (req, res) => {
-
-  Customer.findOne({ usercode: req.body.usercode })
-    .exec()
-    .then(user => {
-     
-
-      if (!user) {
-        logger.info("CustomerSignin.findOne", { message: "User Not found.", status: false });
-        return res.status(404).send({ message: "User Not found.", status: false });
-      }
-
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accesstoken: null,
-          message: "Invalid Password!",
-          status: false
-        });
-      }
-
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
-      });
-
-      if (user.accountstatus == false) {
-        logger.info("CustomerSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
-        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." });
-      } else {
-
-        logger.info("CustomerSignin", {
-          _id: user._id,
-          usercode: user.usercode,
-          username: user.username, 
-          dob: user.dob,
-          mobile: user.mobile, 
-          email: user.email, 
-          address: user.address, 
-          profile: user.profile,
-          accountstatus: user.accountStatus,
-          roles: user.roles, 
-          BUILD_ID: user.BUILD_ID, 
-          accesstoken: token,
-          status: true
-        });
-
-
-        res.status(200).send({
-          _id: user._id,
-          usercode: user.usercode,
-          username: user.username, 
-          dob: user.dob,
-          mobile: user.mobile, 
-          email: user.email, 
-          address: user.address, 
-          profile: user.profile,
-          accountstatus: user.accountStatus,
-          roles: user.roles, 
-          BUILD_ID: user.BUILD_ID, 
-          accesstoken: token,
-          status: true
-        });
-      }
-    });
-
-};
-
-exports.CustomerSignup = (req, res) => {
-
-  console.log(req.body);
-
-  const customer = new Customer({
-
-    usercode:  req.body.usercode,
-    username:  req.body.username,
-    dob: req.body.dob,
-    mobile:  req.body.mobile,
-    email:  req.body.email,
-    address: req.body.address,
-    location: req.body.location,
-    password:  bcrypt.hashSync(req.body.password, 8),
-    profile:  req.body.profile,
-    accountstatus: true,
-    roles:  "Customer",
-    BUILD_ID: req.body.BUILD_ID, 
-    createdOn: moment().format('LLL').toString()
-
-  });
-
-  customer.save();
-
-
-  logger.info("CustomerSignup", { message: "Customer was registered successfully!", status: true });
-  res.send({ message: "Customer was registered successfully!", status: true });
-
-  // Customer.findOne({ email: customer.email }, (err, userEmail) => {
-  //   if (err) {
-  //     logger.info("customer.findOne", { err });
-  //     res.status(500).send({ message: err, status: true });
-  //     return;
-  //   }
-
-  //   if (userEmail != null && userEmail.email == customer.email) {
-  //     res.status(500).send({ message: "The user's email ID already exists.", status: true });
-  //     return;
-  //   }
-
-  //   Customer.findOne({ mobile: customer.mobile }, (err, userMobile) => {
-  //     if (err) {
-  //       logger.info("customer.findOne", { err });
-  //       res.status(500).send({ message: err, status: true });
-  //       return;
-  //     }
-
-  //     if (userMobile != null && userMobile.mobile == customer.mobile) {
-  //       res.status(500).send({ message: "The user's mobile number already exists.", status: true });
-  //       return;
-  //     }
-
-  //     Customer.save((err, Customer) => {
-  //       if (err) {
-  //         logger.info("Customer.save", { err });
-  //         res.status(500).send({ message: err, status: true });
-  //         return;
-  //       }
-
-  //       logger.info("Signup", { message: "Customer was registered successfully!", status: true });
-  //       res.send({ message: "Customer was registered successfully!", status: true });
-
-  //     });
-  //    });
-  // });
-
-
-
-};
-
-exports.getCustomers = async (req, res) => {
-
-  const list = await Customer.find({ accountstatus: true });
-  logger.info("getCustomerList.find", { customerlist: list, status: true });
-  res.status(200).send({ customerlist: list, status: true });
-
-};
-
-exports.getCustomersDisable = async (req, res) => {
-
-  const list = await Customer.find({ accountstatus: false });
-  logger.info("getCustomerList.find", { customerlist: list, status: true });
-  res.status(200).send({ customerlist: list, status: true });
-
-};
-
-
 
 //-------------------------------------------------------------------
 //builder Login
@@ -497,6 +337,326 @@ exports.getBuildersDisable = async (req, res) => {
   res.status(200).send({ builderlist: build, status: true });
 
 };
+
+
+//--------------------------------------------------------------------------------------
+//contractor
+exports.ContractorLogin = (req, res) => {
+  console.log(req.body);
+
+  Contractor.findOne({ usercode: req.body.usercode })
+    .exec() 
+    .then(user => {
+
+      if (!user) {
+        logger.info("ContractorSignin.findOne", { message: "User Not found.", status: false });
+        return res.status(404).send({ message: "User Not found.", status: false });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+
+      if (!passwordIsValid) {
+        return res.status(401).send({ accesstoken: null, message: "Invalid Password!", status: false });
+      }
+
+      var token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400 // 24 hours
+      });
+
+
+      if (user.accountstatus == false) {
+        logger.info("ContractorSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
+        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." });
+      } else {
+        logger.info("ContractorSignin", { 
+
+          _id: user._id, 
+          usercode:  user.usercode,
+          username:  user.username,
+          mobile: user.mobile,
+          email: user.email,  
+          profile: user.profile,
+          accountstatus: user.accountStatus,
+          roles: user.roles,
+          BUILD_ID: user.BUILD_ID,
+          accesstoken: token, 
+          status: true 
+        });
+
+
+        res.status(200).send({
+        
+          _id: user._id, 
+          usercode:  user.usercode,
+          username:  user.username,
+          mobile: user.mobile,
+          email: user.email,  
+          profile: user.profile,
+          accountstatus: user.accountStatus,
+          roles: user.roles,
+          BUILD_ID: user.BUILD_ID,
+          accesstoken: token, 
+          status: true 
+        });
+      }
+
+
+    }).catch(err => {
+      // Handle error
+      logger.info("ContractorSignin.findOne", { err });
+      res.status(500).send({ message: err, status: false });
+      return;
+    });
+ 
+
+}
+
+exports.ContractorSignup = (req, res) => {
+
+  console.log(req.body);
+  
+  const contractor = new Contractor({
+    usercode: req.body.usercode,  
+    username: req.body.username,
+    mobile:  req.body.mobile,
+    email:  req.body.email, 
+    password: bcrypt.hashSync(req.body.password, 8),  
+    profile:  req.body.profile, 
+    address: req.body.address,
+    location: req.body.location,
+    accountstatus: true ,
+    roles: "Contractor",  
+    BUILD_ID: req.body.BUILD_ID,
+    createdOn: moment().format('LLL').toString()
+
+  });
+
+  contractor.save();
+
+  logger.info("ContractorSignup", { message: "Contractor was registered successfully!", status: true });
+  res.send({ message: "Contractor was registered successfully!", status: true });
+
+
+
+  // Contractor.findOne({ email: contractor.email }, (err, userEmail) => {
+  //   if (err) {
+  //     logger.info("contractor.findOne", { err });
+  //     res.status(500).send({ message: err, status: true });
+  //     return;
+  //   }
+
+  //   if (userEmail != null && userEmail.email == contractor.email) {
+  //     res.status(500).send({ message: "The user's email ID already exists.", status: true });
+  //     return;
+  //   }
+
+  //   Contractor.findOne({ mobile: contractor.mobile }, (err, userMobile) => {
+  //     if (err) {
+  //       logger.info("contractor.findOne", { err });
+  //       res.status(500).send({ message: err, status: true });
+  //       return;
+  //     }
+
+  //     if (userMobile != null && userMobile.mobile == contractor.mobile) {
+  //       res.status(500).send({ message: "The user's mobile number already exists.", status: true });
+  //       return;
+  //     }
+
+  //     Contractor.save((err, Contractor) => {
+  //       if (err) {
+  //         logger.info("Contractor.save", { err });
+  //         res.status(500).send({ message: err, status: true });
+  //         return;
+  //       }
+
+  //       logger.info("Signup", { message: "Contractor was registered successfully!", status: true });
+  //       res.send({ message: "Contractor was registered successfully!", status: true });
+
+  //     });
+  //   });
+  // });
+
+
+}
+
+exports.GetContractor = async (req, res) => {
+
+  const list = await Contractor.find({ accountstatus : true });
+  logger.info("getContractorlist.find", { contractorlist: list, status: true });
+  res.status(200).send({ contractorlist: list, status: true });
+
+};
+
+exports.GetContractorDisable = async (req, res) => {
+  const build = await Contractor.find({ accountstatus: false });
+  logger.info("getContractorlist.find", { contractorlist: build, status: true });
+  res.status(200).send({ contractorlist: build, status: true });
+
+};
+
+
+//-------------------------------------------------------------------
+//Customer Login
+exports.CustomerLogin = (req, res) => {
+
+  Customer.findOne({ usercode: req.body.usercode })
+    .exec()
+    .then(user => {
+     
+
+      if (!user) {
+        logger.info("CustomerSignin.findOne", { message: "User Not found.", status: false });
+        return res.status(404).send({ message: "User Not found.", status: false });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accesstoken: null,
+          message: "Invalid Password!",
+          status: false
+        });
+      }
+
+      var token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400 // 24 hours
+      });
+
+      if (user.accountstatus == false) {
+        logger.info("CustomerSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
+        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." });
+      } else {
+
+        logger.info("CustomerSignin", {
+          _id: user._id,
+          usercode: user.usercode,
+          username: user.username, 
+          dob: user.dob,
+          mobile: user.mobile, 
+          email: user.email, 
+          address: user.address, 
+          profile: user.profile,
+          accountstatus: user.accountStatus,
+          roles: user.roles, 
+          BUILD_ID: user.BUILD_ID, 
+          accesstoken: token,
+          status: true
+        });
+
+
+        res.status(200).send({
+          _id: user._id,
+          usercode: user.usercode,
+          username: user.username, 
+          dob: user.dob,
+          mobile: user.mobile, 
+          email: user.email, 
+          address: user.address, 
+          profile: user.profile,
+          accountstatus: user.accountStatus,
+          roles: user.roles, 
+          BUILD_ID: user.BUILD_ID, 
+          accesstoken: token,
+          status: true
+        });
+      }
+    });
+
+};
+
+exports.CustomerSignup = (req, res) => {
+
+  console.log(req.body);
+
+  const customer = new Customer({
+
+    usercode:  req.body.usercode,
+    username:  req.body.username,
+    dob: req.body.dob,
+    mobile:  req.body.mobile,
+    email:  req.body.email,
+    address: req.body.address,
+    location: req.body.location,
+    password:  bcrypt.hashSync(req.body.password, 8),
+    profile:  req.body.profile,
+    accountstatus: true,
+    roles:  "Customer",
+    BUILD_ID: req.body.BUILD_ID, 
+    createdOn: moment().format('LLL').toString()
+
+  });
+
+  customer.save();
+
+
+  logger.info("CustomerSignup", { message: "Customer was registered successfully!", status: true });
+  res.send({ message: "Customer was registered successfully!", status: true });
+
+  // Customer.findOne({ email: customer.email }, (err, userEmail) => {
+  //   if (err) {
+  //     logger.info("customer.findOne", { err });
+  //     res.status(500).send({ message: err, status: true });
+  //     return;
+  //   }
+
+  //   if (userEmail != null && userEmail.email == customer.email) {
+  //     res.status(500).send({ message: "The user's email ID already exists.", status: true });
+  //     return;
+  //   }
+
+  //   Customer.findOne({ mobile: customer.mobile }, (err, userMobile) => {
+  //     if (err) {
+  //       logger.info("customer.findOne", { err });
+  //       res.status(500).send({ message: err, status: true });
+  //       return;
+  //     }
+
+  //     if (userMobile != null && userMobile.mobile == customer.mobile) {
+  //       res.status(500).send({ message: "The user's mobile number already exists.", status: true });
+  //       return;
+  //     }
+
+  //     Customer.save((err, Customer) => {
+  //       if (err) {
+  //         logger.info("Customer.save", { err });
+  //         res.status(500).send({ message: err, status: true });
+  //         return;
+  //       }
+
+  //       logger.info("Signup", { message: "Customer was registered successfully!", status: true });
+  //       res.send({ message: "Customer was registered successfully!", status: true });
+
+  //     });
+  //    });
+  // });
+
+
+
+};
+
+exports.getCustomers = async (req, res) => {
+
+  const list = await Customer.find({ accountstatus: true });
+  logger.info("getCustomerList.find", { customerlist: list, status: true });
+  res.status(200).send({ customerlist: list, status: true });
+
+};
+
+exports.getCustomersDisable = async (req, res) => {
+
+  const list = await Customer.find({ accountstatus: false });
+  logger.info("getCustomerList.find", { customerlist: list, status: true });
+  res.status(200).send({ customerlist: list, status: true });
+
+};
+
+
+
 
 
 
@@ -676,160 +836,6 @@ exports.getSuppliersDisable = async (req, res) => {
 }; 
 
 
-//--------------------------------------------------------------------------------------
-//contractor
-exports.ContractorLogin = (req, res) => {
-  console.log(req.body);
-
-  Contractor.findOne({ usercode: req.body.usercode })
-    .exec() 
-    .then(user => {
-
-      if (!user) {
-        logger.info("ContractorSignin.findOne", { message: "User Not found.", status: false });
-        return res.status(404).send({ message: "User Not found.", status: false });
-      }
-
-      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-
-
-      if (!passwordIsValid) {
-        return res.status(401).send({ accesstoken: null, message: "Invalid Password!", status: false });
-      }
-
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
-      });
-
-
-      if (user.accountstatus == false) {
-        logger.info("ContractorSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
-        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." });
-      } else {
-        logger.info("ContractorSignin", { 
-
-          _id: user._id, 
-          usercode:  user.usercode,
-          username:  user.username,
-          mobile: user.mobile,
-          email: user.email,  
-          profile: user.profile,
-          accountstatus: user.accountStatus,
-          roles: user.roles,
-          BUILD_ID: user.BUILD_ID,
-          accesstoken: token, 
-          status: true 
-        });
-
-
-        res.status(200).send({
-        
-          _id: user._id, 
-          usercode:  user.usercode,
-          username:  user.username,
-          mobile: user.mobile,
-          email: user.email,  
-          profile: user.profile,
-          accountstatus: user.accountStatus,
-          roles: user.roles,
-          BUILD_ID: user.BUILD_ID,
-          accesstoken: token, 
-          status: true 
-        });
-      }
-
-
-    }).catch(err => {
-      // Handle error
-      logger.info("ContractorSignin.findOne", { err });
-      res.status(500).send({ message: err, status: false });
-      return;
-    });
- 
-
-}
-
-exports.ContractorSignup = (req, res) => {
-
-  console.log(req.body);
-  
-  const contractor = new Contractor({
-    usercode: req.body.usercode,  
-    username: req.body.username,
-    mobile:  req.body.mobile,
-    email:  req.body.email, 
-    password: bcrypt.hashSync(req.body.password, 8),  
-    profile:  req.body.profile, 
-    address: req.body.address,
-    location: req.body.location,
-    accountstatus: true ,
-    roles: "Contractor",  
-    BUILD_ID: req.body.BUILD_ID,
-    createdOn: moment().format('LLL').toString()
-
-  });
-
-  contractor.save();
-
-  logger.info("ContractorSignup", { message: "Contractor was registered successfully!", status: true });
-  res.send({ message: "Contractor was registered successfully!", status: true });
-
-
-
-  // Contractor.findOne({ email: contractor.email }, (err, userEmail) => {
-  //   if (err) {
-  //     logger.info("contractor.findOne", { err });
-  //     res.status(500).send({ message: err, status: true });
-  //     return;
-  //   }
-
-  //   if (userEmail != null && userEmail.email == contractor.email) {
-  //     res.status(500).send({ message: "The user's email ID already exists.", status: true });
-  //     return;
-  //   }
-
-  //   Contractor.findOne({ mobile: contractor.mobile }, (err, userMobile) => {
-  //     if (err) {
-  //       logger.info("contractor.findOne", { err });
-  //       res.status(500).send({ message: err, status: true });
-  //       return;
-  //     }
-
-  //     if (userMobile != null && userMobile.mobile == contractor.mobile) {
-  //       res.status(500).send({ message: "The user's mobile number already exists.", status: true });
-  //       return;
-  //     }
-
-  //     Contractor.save((err, Contractor) => {
-  //       if (err) {
-  //         logger.info("Contractor.save", { err });
-  //         res.status(500).send({ message: err, status: true });
-  //         return;
-  //       }
-
-  //       logger.info("Signup", { message: "Contractor was registered successfully!", status: true });
-  //       res.send({ message: "Contractor was registered successfully!", status: true });
-
-  //     });
-  //   });
-  // });
-
-
-}
-
-exports.GetContractor = async (req, res) => {
-
-  const list = await Contractor.find({ accountstatus : true });
-  logger.info("getContractorlist.find", { contractorlist: list, status: true });
-  res.status(200).send({ contractorlist: list, status: true });
-
-};
-exports.GetContractorDisable = async (req, res) => {
-  const build = await Contractor.find({ accountstatus: false });
-  logger.info("getContractorlist.find", { contractorlist: build, status: true });
-  res.status(200).send({ contractorlist: build, status: true });
-
-};
 
 //-----------------------------------------------------------------------------------------
 //project
@@ -893,27 +899,6 @@ exports.GetAllProject = async (req, res) => {
 };
 
 
-
-//dashboard data
-exports.getDashboardData = async (req, res) => {
-  
-  // const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
-  // const endOfMonth = moment().endOf('month').format('YYYY-MM-DD hh:mm');
-
-  // let data = {
-  //   totalbuilders: await Builder.countDocuments({ accountstatus: true }),
-  //   totalcustomers: await Customer.countDocuments({ accountstatus: true }),
-  //   totalsuppliers: await Supplier.countDocuments({ accountstatus: true }),
-  //   totalcontractors: await Vendor.countDocuments({ accountstatus: true }),
-  //   totalsubcontractors: await Contractor.countDocuments({ accountstatus: true }),
-  //   totalproject: await Project.countDocuments({ accountstatus: true }),
-  // };
-
-      // logger.info("getDashboardData.find", { dashboardData: data, status: true });
-      // res.status(200).send({ dashboardData: data, status: true });
-
-  
-};
 
 
 //materials
@@ -983,3 +968,24 @@ exports.getProjectMaterials = async (req, res) => {
 };
 
 
+
+//dashboard data
+exports.getDashboardData = async (req, res) => {
+  
+  // const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
+  // const endOfMonth = moment().endOf('month').format('YYYY-MM-DD hh:mm');
+
+  // let data = {
+  //   totalbuilders: await Builder.countDocuments({ accountstatus: true }),
+  //   totalcustomers: await Customer.countDocuments({ accountstatus: true }),
+  //   totalsuppliers: await Supplier.countDocuments({ accountstatus: true }),
+  //   totalcontractors: await Vendor.countDocuments({ accountstatus: true }),
+  //   totalsubcontractors: await Contractor.countDocuments({ accountstatus: true }),
+  //   totalproject: await Project.countDocuments({ accountstatus: true }),
+  // };
+
+      // logger.info("getDashboardData.find", { dashboardData: data, status: true });
+      // res.status(200).send({ dashboardData: data, status: true });
+
+  
+};
