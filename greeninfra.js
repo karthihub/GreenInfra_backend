@@ -24,7 +24,7 @@ const upload = multer({ storage });
 
 
 app.use(cors({
-    origin: ['http://localhost:65002', 'http://localhost:4200', 'http://localhost:8100', ],
+    origin: ['http://localhost:8100','http://localhost:8084','http://192.168.1.5:8084', 'http://agamservices.agamdigital.in:8084', 'https://agamservices.agamdigital.in:8084' ],
     credentials: true
 }));
 
