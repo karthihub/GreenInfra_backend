@@ -23,7 +23,7 @@ const Project = mongoose.model(
         startdate: { type: Date },
         enddate: { type: Date },
         extensiondate: { type: Date },
-        projectStatus : { type: Boolean},
+        projectStatus : { type: String},
         createdOn: { type: Date }
     })
 );

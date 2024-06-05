@@ -14,7 +14,7 @@ db.Contractor =  require("./contractor.model");
 
 db.Materials = require("./material.model");
 db.ProjectMaterials = require("./projectmaterial.model"); 
-
+db.Task = require("./task.model");
 db.Project = require("./project.model");
 
 // db.players = require("./players.model");

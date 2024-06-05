@@ -120,6 +120,16 @@ module.exports = function (app) {
  app.get("/api/adminauth/getProjectMaterials", [authJwt.verifyToken], controller.getProjectMaterials);
 
   
+ //task
+ app.post("/api/adminauth/taskAdd",  [authJwt.verifyToken], controller.taskAdd);
+
+ app.get("/api/adminauth/taskList",  [authJwt.verifyToken], controller.tasklist);
+
+ app.get("/api/adminauth/taskComplete",  [authJwt.verifyToken], controller.taskComplete);
+
+
+
+
 
 
   // app.post("/api/adminauth/addnewplayer", upload.single("file"), [authJwt.verifyToken], controller.addnewplayer);

@@ -23,6 +23,7 @@ const Project = db.Project;
 
 const ProjectMaterials = db.ProjectMaterials;
 const Materials = db.Materials;
+const Task = db.Task;
 
 const mongoose = require("mongoose");
 const Account = db.Account;
@@ -864,7 +865,7 @@ exports.ProjectAdd = (req, res) => {
     startdate: req.body.startdate,
     enddate: req.body.enddate,
     extensiondate: req.body.extensiondate,
-    projectStatus : true,
+    projectStatus : "open",
     createdOn: moment().format('LLL').toString(),
     // material: req.body.material,
   });
@@ -967,6 +968,51 @@ exports.getProjectMaterials = async (req, res) => {
 
 };
 
+//task
+exports.taskAdd = (req, res) => {
+
+
+  console.log(req.body);
+  
+  const task = new Task({
+
+    task : req.body.task,
+    remarks :  req.body.remarks,
+    progress :  req.body.progress,
+    price :  req.body.price,
+    updateOn : moment().format('LLL').toString(),
+    createdOn : moment().format('LLL').toString(),
+    accountstatus : true ,
+    BUILDER_ID :  req.body.BUILDER_ID,
+    SUPPLIER_ID :  req.body.SUPPLIER_ID,
+    CONTRACTOR_ID : req.body.CONTRACTOR_ID
+
+  });
+
+  task.save();
+
+  logger.info("Task Add", { message: "Task was added successfully!", status: true });
+  res.send({ message: "Task was added successfully!", status: true });
+
+
+};
+
+exports.tasklist = async (req, res) => {
+
+  const list = await Task.find({});
+  logger.info("Tasklist.find", { Tasklist: list, status: true });
+  res.status(200).send({ Tasklist: list, status: true });
+
+};
+
+exports.taskComplete = async (req, res) => {
+  
+  const list = await Task.find({});
+  logger.info("Tasklist.find", { Tasklist: list, status: true });
+  res.status(200).send({ Tasklist: list, status: true });
+
+};
+
 
 
 //dashboard data
@@ -987,5 +1033,14 @@ exports.getDashboardData = async (req, res) => {
       // logger.info("getDashboardData.find", { dashboardData: data, status: true });
       // res.status(200).send({ dashboardData: data, status: true });
 
-  
+  let data = {
+    totalproject: await Project.countDocuments({}),
+    projectcompleted: await Project.countDocuments({ projectStatus: "completed" }),
+    projectterminated: await Project.countDocuments({ projectStatus: "terminated" }),
+    projectclosed: await Project.countDocuments({ projectStatus: "closed" }),
+  }
+
+  logger.info("getDashboardData.find", { dashboardData: data, status: true });
+  res.status(200).send({ dashboardData: data, status: true });
 };
+

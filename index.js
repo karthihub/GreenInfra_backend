@@ -24,7 +24,7 @@ const upload = multer({ storage });
 
 
 app.use(cors({
-    origin: ['http://localhost:65002', 'http://localhost:4200', 'http://192.168.1.5:4200', 'https://firstkick.co.in', 'http://firstkick.co.in', 'https://www.firstkick.co.in'],
+    origin: ['http://localhost:65002', 'http://localhost:4200', 'http://localhost:8100', ],
     credentials: true
 }));
 
@@ -87,7 +87,7 @@ app.use('/Blueprint', express.static('Blueprint'));
 // set port, listen for requests
 const PORT1 = process.env.PORT || 65003;
 
-const PORT2 = process.env.PORT || 65004;
+const PORT2 = process.env.PORT || 8084;
 
 // sslServer.listen(PORT1, () => {
 //     console.log(`Server is running on port ${PORT1}.`);

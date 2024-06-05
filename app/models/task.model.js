@@ -14,7 +14,7 @@ const Task = mongoose.model(
         accountstatus : { type: Boolean, default: true },
         BUILDER_ID : { type: String},
         SUPPLIER_ID : { type: String },
-    
+        CONTRACTOR_ID : { type: String }
     })
 );
 
