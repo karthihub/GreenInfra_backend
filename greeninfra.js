@@ -4,7 +4,7 @@ const dbConfig = require('./app/config/db.config');
 const logger = require("./app/models/logger.model");
 const app = express();
 
-// const https = require('https');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 
@@ -24,7 +24,7 @@ const upload = multer({ storage });
 
 
 app.use(cors({
-    origin: ['http://localhost:8100','http://localhost:8084','http://192.168.1.5:8084', 'http://agamservices.agamdigital.in:8084', 'https://agamservices.agamdigital.in:8084' ],
+    origin: ['http://localhost:8100','http://localhost:8084','http://192.168.1.5:8084', 'http://agamservices.agamdigital.in:65012', 'https://agamservices.agamdigital.in:65011' ],
     credentials: true
 }));
 
