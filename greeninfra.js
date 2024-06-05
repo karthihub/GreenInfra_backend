@@ -76,22 +76,22 @@ require('./app/routes/adminauth.routes') (app);
 app.use('/Blueprint', express.static('Blueprint'));
 
 
-// const sslServer = https.createServer(
-//     {
-//         key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-//         cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
-//     },
-//     app
-// )
+const sslServer = https.createServer(
+    {
+        key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+        cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
+    },
+    app
+)
 
 // set port, listen for requests
-const PORT1 = process.env.PORT || 65003;
+const PORT1 = process.env.PORT || 65011;
 
-const PORT2 = process.env.PORT || 8084;
+const PORT2 = process.env.PORT || 65012;
 
-// sslServer.listen(PORT1, () => {
-//     console.log(`Server is running on port ${PORT1}.`);
-// });
+sslServer.listen(PORT1, () => {
+    console.log(`Server is running on port ${PORT1}.`);
+});
 
 app.listen(PORT2, () => {
     console.log(`Server is running on port ${PORT2}.`);
