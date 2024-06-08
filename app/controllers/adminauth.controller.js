@@ -197,7 +197,10 @@ exports.BuilderLogin = (req, res) => {
 
       if (user.accountstatus == false) {
         logger.info("BuilderSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
-        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." });
+        res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." }).header(
+          "Access-Control-Allow-Headers",
+          "x-access-token, Origin, Content-Type, Accept"
+        );
       } else {
         logger.info("BuilderSignin", {
           _id: user._id, 
@@ -220,7 +223,10 @@ exports.BuilderLogin = (req, res) => {
           status: true 
           });
 
-
+        header(
+            "Access-Control-Allow-Headers",
+            "x-access-token, Origin, Content-Type, Accept"
+          );
         res.status(200).send({
           _id: user._id, 
           usercode: user.usercode,  
@@ -240,7 +246,10 @@ exports.BuilderLogin = (req, res) => {
           createdOn: user.createdOn,
           accesstoken: token, 
           status: true 
-        });
+        }).header(
+          "Access-Control-Allow-Headers",
+          "x-access-token, Origin, Content-Type, Accept"
+        );
       }
 
 
