@@ -180,14 +180,20 @@ exports.BuilderLogin = (req, res) => {
 
       if (!user) {
         logger.info("BuilderSignin.findOne", { message: "User Not found.", status: false });
-        return res.status(404).send({ message: "User Not found.", status: false });
+        return res.status(404).send({ message: "User Not found.", status: false }).header(
+          "Access-Control-Allow-Headers","*",
+          "x-access-token, Origin, Content-Type, Accept"
+        );
       }
 
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
 
       if (!passwordIsValid) {
-        return res.status(401).send({ accesstoken: null, message: "Invalid Password!", status: false });
+        return res.status(401).send({ accesstoken: null, message: "Invalid Password!", status: false }).header(
+          "Access-Control-Allow-Headers","*",
+          "x-access-token, Origin, Content-Type, Accept"
+        );
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
@@ -198,9 +204,10 @@ exports.BuilderLogin = (req, res) => {
       if (user.accountstatus == false) {
         logger.info("BuilderSignin", { status: false, message: "Your account is not activated; please contact the administrator." });
         res.status(200).send({ status: false, message: "Your account is not activated; please contact the administrator." }).header(
-          "Access-Control-Allow-Headers",
+          "Access-Control-Allow-Headers","*",
           "x-access-token, Origin, Content-Type, Accept"
         );
+
       } else {
         logger.info("BuilderSignin", {
           _id: user._id, 
@@ -222,11 +229,7 @@ exports.BuilderLogin = (req, res) => {
           accesstoken: token, 
           status: true 
           });
-
-        header(
-            "Access-Control-Allow-Headers",
-            "x-access-token, Origin, Content-Type, Accept"
-          );
+          
         res.status(200).send({
           _id: user._id, 
           usercode: user.usercode,  
@@ -247,7 +250,7 @@ exports.BuilderLogin = (req, res) => {
           accesstoken: token, 
           status: true 
         }).header(
-          "Access-Control-Allow-Headers",
+          "Access-Control-Allow-Headers","*",
           "x-access-token, Origin, Content-Type, Accept"
         );
       }
@@ -256,7 +259,10 @@ exports.BuilderLogin = (req, res) => {
     }).catch(err => {
       // Handle error
       logger.info("BuilderSignin.findOne", { err });
-      res.status(500).send({ message: err, status: false });
+      res.status(500).send({ message: err, status: false }).header(
+        "Access-Control-Allow-Headers","*",
+        "x-access-token, Origin, Content-Type, Accept"
+      );
       return;
     });
     
