@@ -24,9 +24,17 @@ const upload = multer({ storage });
 
 
 app.use(cors({
-    origin: ['*','http://localhost:8100','http://localhost:8084','http://192.168.1.5:8084', 'http://agamservices.agamdigital.in:65012', 'https://agamservices.agamdigital.in:65011' ],
-    credentials: true
+    origin: '',
+        // '*','http://localhost:8100','http://localhost:8084','http://192.168.1.5:8084', 'http://agamservices.agamdigital.in:65012', 'https://agamservices.agamdigital.in:65011' ],
+    credentials: true,
+
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    
 }));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
